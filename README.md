@@ -21,7 +21,7 @@ $ sudo apt-get update && sudo apt-get install arduino
 $ git clone https://github.com/robocoding/sumoino.git /var/tmp/sumoino
 $ sudo mv /var/tmp/sumoino/Sumorobot /usr/share/arduino/libraries/
 ```
-* launch Arduino and upload a example
+* launch Arduino and upload an example
 
 other links
 ===========
