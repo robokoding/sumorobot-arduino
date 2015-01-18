@@ -1,0 +1,109 @@
+#######################################
+# Syntax Coloring Map Sumorobt
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Sumorobot	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setBlocking	KEYWORD2
+useWebSockets	KEYWORD2
+useRawSockets	KEYWORD2
+processInput	KEYWORD2
+
+# english version
+stop	KEYWORD2
+left	KEYWORD2
+start	KEYWORD2
+right	KEYWORD2
+forward	KEYWORD2
+spinLeft	KEYWORD2
+testLine	KEYWORD2
+backward	KEYWORD2
+spinRight	KEYWORD2
+leftMotor	KEYWORD2
+followLine	KEYWORD2
+rightMotor	KEYWORD2
+testSensors	KEYWORD2
+testOpponent	KEYWORD2
+
+# estonian version
+stopp	KEYWORD2
+edasi	KEYWORD2
+tagasi	KEYWORD2
+viivitus	KEYWORD2
+paremale	KEYWORD2
+vasakule	KEYWORD2
+paremMootor	KEYWORD2
+vasakMootor	KEYWORD2
+
+# german version
+stop	KEYWORD2
+warte	KEYWORD2
+links	KEYWORD2
+rechts	KEYWORD2
+vorwaerts	KEYWORD2
+rueckwaerts	KEYWORD2
+linkerMotor	KEYWORD2
+rechterMotor	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+# english version
+SLOW	LITERAL1
+SECOND	LITERAL1
+FORWARD	LITERAL1
+BACKWARD	LITERAL1
+MAX_SPEED	LITERAL1
+
+ENEMY_LEFT	LITERAL1
+ENEMY_RIGHT	LITERAL1
+ENEMY_FRONT	LITERAL1
+ENEMY_MIDDLE	LITERAL1
+OPPONENT_LEFT	LITERAL1
+OPPONENT_RIGHT	LITERAL1
+OPPONENT_FRONT	LITERAL1
+OPPONENT_MIDDLE	LITERAL1
+
+LINE_LEFT	LITERAL1
+LINE_RIGHT	LITERAL1
+LINE_FRONT	LITERAL1
+LINE_MIDDLE	LITERAL1
+BOTTOM_LEFT	LITERAL1
+BOTTOM_RIGHT	LITERAL1
+BOTTOM_FRONT	LITERAL1
+BOTTOM_MIDDLE	LITERAL1
+
+# estonian version
+EDASI	LITERAL1
+TAGASI	LITERAL1
+SEKUND	LITERAL1
+AEGLANE	LITERAL1
+MAX_KIIRUS	LITERAL1
+JOON_VASAK	LITERAL1
+JOON_PAREM	LITERAL1
+JOON_KESKEL	LITERAL1
+VASTANE_EES	LITERAL1
+VASTANE_VASAK	LITERAL1
+VASTANE_PAREM	LITERAL1
+
+# german version
+SEKUNDE	LITERAL1
+LANGSAM	LITERAL1
+MAX_TEMPO	LITERAL1
+VORWAERTS	LITERAL1
+RUECKWAERTS	LITERAL1
+LINIE_LINKS	LITERAL1
+LINIE_MITTE	LITERAL1
+LINIE_RECHTS	LITERAL1
+GEGNER_LINKS	LITERAL1
+GEGNER_VORNE	LITERAL1
+GEGNER_RECHTS	LITERAL1
