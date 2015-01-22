@@ -9,6 +9,7 @@
 
 #include "Servo.h"
 #include <EEPROM.h>
+#include "NewPing.h"
 #include "CmdProcessor.h"
 
 /* configuration */
@@ -30,37 +31,36 @@
 #define RIGHT_MOTOR 6
 #define STATUS_LED 13
 #define SPEAKER_PIN 9
-#define FRONT_RIGHT_SENSOR 0
-#define FRONT_LEFT_SENSOR 1
-#define LINE_RIGHT_SENSOR 2
-#define LINE_MIDDLE_SENSOR 3
-#define LINE_LEFT_SENSOR 4
+#define LINE_SENSOR_LEFT A1
+#define LINE_SENSOR_RIGHT A2
+#define ENEMY_SENSOR_LEFT 9000
+#define ENEMY_SENSOR_RIGHT 2
 /* version info */
 #define MAGIC_BYTE_1 0xF0
 #define MAGIC_BYTE_2 0x0D
 #define SUMOROBOT_VERSION "0.1"
 /* calibration */
-#define ENEMY_DISTANCE 150
-#define LIGHT_INTENSITY 600
+#define ENEMY_DISTANCE 50
+#define LINE_INTENSITY 600
 /* for advanced calibration */
 #define ENEMY_DISTANCE_LEFT ENEMY_DISTANCE
 #define ENEMY_DISTANCE_RIGHT ENEMY_DISTANCE
-#define LIGHT_INTENSITY_LEFT LIGHT_INTENSITY
-#define LIGHT_INTENSITY_RIGHT LIGHT_INTENSITY
-#define LIGHT_INTENSITY_MIDDLE LIGHT_INTENSITY
+#define LINE_INTENSITY_LEFT LINE_INTENSITY
+#define LINE_INTENSITY_RIGHT LINE_INTENSITY
 
-typedef enum {LEFT, RIGHT, FRONT} dirState_t;
+typedef enum {LEFT, RIGHT, FRONT} dir_t;
 typedef enum {POWERED_UP, CONNECTED} mainState_t;
 
 struct HwVersion {
-  byte major;
-  byte minor;
+    byte major;
+    byte minor;
 };
 
 class Sumorobot {
     public:
         Sumorobot();
         void setup();
+        void reset();
         void process();
         void setup(Stream &s);
         void setHwVersion(char&);
@@ -69,25 +69,41 @@ class Sumorobot {
         void stop();
         void left();
         void right();
-        void reset();
         void beep(int);
         void forward();
         void backward();
+        int isLine(dir_t);
+        int isEnemy(dir_t);
+        int isBorder(dir_t dir) { return isLine(dir); }
+        int isOpponent(dir_t dir) { return isEnemy(dir); }
         /* Estonian version */
         void stopp() { stop(); }
         void edasi() { forward(); }
         void vasakule() { left(); }
         void paremale() { right(); }
         void tagasi() { backward(); }
+        void piiks(int dur) { beep(dur); }
+        int onJoon(dir_t dir) { return isLine(dir); }
+        int onPiir(dir_t dir) { return isLine(dir); }
+        int onVastane(dir_t dir) { return isEnemy(dir); }
+        int onVaenlane(dir_t dir) { return isEnemy(dir); }
         /* German version */
         void links() { left(); }
         void rechts() { right(); }
         void vorwaerts() { forward(); }
+        void ton(int dur) { beep(dur); }
         void rueckwaerts() { backward(); }
+        int istLinie(dir_t dir) { return isLine(dir); }
+        int istGrenze(dir_t dir) { return isLine(dir); }
+        int istFeind(dir_t dir) { return isEnemy(dir); }
+        int istGegner(dir_t dir) { return isEnemy(dir); }
     private:
+        void start();
         void checkState();
         void ledHandler();
         void initHwVersion();
+        /* sumorobot object instance */
+        Sumorobot& self() { return *this; }
         int getSpeed(uint8_t, uint8_t, uint8_t);
         /* motors */
         Servo leftServo;
@@ -95,47 +111,6 @@ class Sumorobot {
         /* wifi state */
         mainState_t mainState;
         unsigned long lastLedChange;
-        /* sumorobot object instance */
-        Sumorobot& self() { return *this; }
 };
-
-#define READ_LINE(analog, distance) (analogRead(analog) > distance)
-#define READ_ENEMY(analog, distance) (analogRead(analog) < distance)
-
-#define ENEMY_LEFT READ_ENEMY(FRONT_LEFT_SENSOR, ENEMY_DISTANCE_LEFT)
-#define ENEMY_RIGHT READ_ENEMY(FRONT_RIGHT_SENSOR, ENEMY_DISTANCE_RIGHT)
-#define ENEMY_FRONT (ENEMY_LEFT && ENEMY_RIGHT)
-
-#define ENEMY_MIDDLE ENEMY_FRONT
-#define OPPONENT_LEFT ENEMY_LEFT
-#define OPPONENT_RIGHT ENEMY_RIGHT
-#define OPPONENT_FRONT ENEMY_FRONT
-#define OPPONENT_MIDDLE ENEMY_FRONT
-
-#define LINE_LEFT READ_LINE(LINE_LEFT_SENSOR, LIGHT_INTENSITY_RIGHT)
-#define LINE_RIGHT READ_LINE(LINE_RIGHT_SENSOR, LIGHT_INTENSITY_RIGHT)
-#define LINE_MIDDLE READ_LINE(LINE_MIDDLE_SENSOR, LIGHT_INTENSITY_MIDDLE)
-
-#define BOTTOM_LEFT LINE_LEFT
-#define LINE_FRONT LINE_MIDDLE
-#define BOTTOM_RIGHT LINE_RIGHT
-#define BOTTOM_FRONT LINE_MIDDLE
-#define BOTTOM_MIDDLE LINE_MIDDLE
-
-#define VASTANE_EES ENEMY_FRONT
-#define VASTANE_VASAK ENEMY_LEFT
-#define VASTANE_PAREM ENEMY_RIGHT
-
-#define JOON_VASAK LINE_LEFT
-#define JOON_PAREM LINE_RIGHT
-#define JOON_KESKMINE LINE_MIDDLE
-
-#define GEGNER_LINKS ENEMY_LEFT
-#define GEGNER_VORNE ENEMY_FRONT
-#define GEGNER_RECHTS ENEMY_RIGHT
-
-#define LINIE_LINKS LINE_LEFT
-#define LINIE_RECHTS LINE_RIGHT
-#define LINIE_MITTE LINE_MIDDLE
 
 #endif /* SUMOROBOT_H_ */

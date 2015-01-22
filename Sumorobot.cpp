@@ -2,6 +2,9 @@
 
 /* command processor */
 CmdProcessor cmdProcessor;
+/* ultrasonic sensors */
+//NewPing leftSonar(ENEMY_SENSOR_LEFT, ENEMY_SENSOR_LEFT, 200);
+NewPing rightSonar(4, 2, 200);
 
 /* Pointer to the bootloader memory location */
 void* bl = (void *) 0x3c00;
@@ -15,14 +18,6 @@ Sumorobot::Sumorobot() {
 void Sumorobot::setup() {
     /* set up the status LED */
     pinMode(STATUS_LED, OUTPUT);
-
-    /* initialize the motors */
-    this->leftServo.attach(LEFT_MOTOR);
-    this->rightServo.attach(RIGHT_MOTOR);
-
-    /* set up the proximity sensor pins */
-    pinMode(FRONT_LEFT_SENSOR, INPUT_PULLUP);
-    pinMode(FRONT_RIGHT_SENSOR, INPUT_PULLUP);
 }
 
 void Sumorobot::setup(Stream &s) {
@@ -32,6 +27,12 @@ void Sumorobot::setup(Stream &s) {
     /* set up the ready pin to communicate with the WiFi module */
     pinMode(WIFI_READY, INPUT); //nReady
     this->initHwVersion();
+}
+
+void Sumorobot::reset() {
+    /* give the response message time to get out */
+    delay(100);
+    goto *bl;
 }
 
 void Sumorobot::initHwVersion(){
@@ -106,44 +107,81 @@ int Sumorobot::getSpeed(uint8_t motor, uint8_t dir, uint8_t speed_percentage) {
     }
 }
 
+void Sumorobot::start() {
+    /* attach the motors when not attached */
+    if (this->leftServo.attached() == false) this->leftServo.attach(LEFT_MOTOR);
+    if (this->rightServo.attached() == false) this->rightServo.attach(RIGHT_MOTOR);
+}
+
 /* to stop */
 void Sumorobot::stop() {
-    this->leftServo.write(MIDPOINT);
-    this->rightServo.write(MIDPOINT);
+    /* stop the motors */
+    this->leftServo.write(MIDPOINT-15);
+    this->rightServo.write(MIDPOINT-23);
+    delay(200);
+    /* detach the motors when attached */
+    if (this->leftServo.attached()) this->leftServo.detach();
+    if (this->rightServo.attached()) this->rightServo.detach();
 }
 
 /* to go forward */
 void Sumorobot::forward() {
+    /* check if motors are attached */
+    this->start();
     this->leftServo.write(getSpeed(LEFT_MOTOR, FORWARD, MAX_SPEED));
     this->rightServo.write(getSpeed(RIGHT_MOTOR, FORWARD, MAX_SPEED));
 }
 
 /* to go backward */
 void Sumorobot::backward() {
+    /* check if motors are attached */
+    this->start();
     this->leftServo.write(getSpeed(LEFT_MOTOR, BACKWARD, MAX_SPEED));
     this->rightServo.write(getSpeed(RIGHT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
 /* to go right while driving forward */
 void Sumorobot::right() {
+    /* check if motors are attached */
+    this->start();
     this->leftServo.write(getSpeed(LEFT_MOTOR, FORWARD, MAX_SPEED));
     this->rightServo.write(getSpeed(RIGHT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
 /* to go left while driving forward */
 void Sumorobot::left() {
+    /* check if motors are attached */
+    this->start();
     this->rightServo.write(getSpeed(RIGHT_MOTOR, FORWARD, MAX_SPEED));
     this->leftServo.write(getSpeed(LEFT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
-void Sumorobot::reset() {
-    /* give the response message time to get out */
-    delay(100);
-    goto *bl;
+void Sumorobot::beep(int duration) {
+    tone(SPEAKER_PIN, NOTE_C4, duration);
 }
 
-void Sumorobot::beep(int duration) {
-  tone(SPEAKER_PIN, NOTE_C4, duration);
+int Sumorobot::isEnemy(dir_t direction) {
+    int distance = (rightSonar.ping() / US_ROUNDTRIP_CM);
+    switch (direction) {
+        case LEFT:
+            return (distance != 0) && (distance < ENEMY_DISTANCE_RIGHT);
+        case RIGHT:
+            return (distance != 0) && (distance < ENEMY_DISTANCE_RIGHT);
+        case FRONT:
+            return (distance != 0) && (distance < ENEMY_DISTANCE_RIGHT);
+    }
+}
+
+int Sumorobot::isLine(dir_t direction) {
+    switch (direction) {
+        case LEFT:
+            return analogRead(LINE_SENSOR_LEFT) > LINE_INTENSITY_LEFT;
+        case RIGHT:
+            return analogRead(LINE_SENSOR_RIGHT) > LINE_INTENSITY_RIGHT;
+        case FRONT:
+            return (analogRead(LINE_SENSOR_LEFT) > LINE_INTENSITY_LEFT) && 
+                (analogRead(LINE_SENSOR_RIGHT) > LINE_INTENSITY_RIGHT);
+    }
 }
 
 void Sumorobot::checkState() {
@@ -158,7 +196,7 @@ void Sumorobot::ledHandler() {
     this->checkState();
     switch (this->mainState) {
         case POWERED_UP:
-            if(millis() - this->lastLedChange > 250) {
+            if (millis() - this->lastLedChange > 250) {
                 this->lastLedChange = millis();
                 digitalWrite(STATUS_LED, !digitalRead(STATUS_LED));
             }

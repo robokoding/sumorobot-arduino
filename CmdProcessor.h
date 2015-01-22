@@ -45,7 +45,6 @@ class CmdProcessor {
     char newLineCount;
     char input_buffer[INPUT_BUFFER_LENGTH];
     byte input_buffer_pos;
-    char current_id[11];
     unsigned long last_char;
     boolean processWSFrame();
     boolean processJSON();

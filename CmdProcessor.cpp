@@ -171,13 +171,11 @@ boolean CmdProcessor::processJSON() {
 
 void CmdProcessor::processCmd(char &cmd, char &arg, char &id) {
   char v[8];
-  if (!strcmp(&cmd, "ping")) {
-    sendResponse("complete", "", id);
-  } else if (!strcmp(&cmd, "reset")) {
-    sendResponse("complete", "", id);
+  if (!strcmp(&cmd, "reset")) {
     _sumorobot->reset();
   } else if (!strcmp(&cmd, "version")) {
     sendResponse("complete", SUMOROBOT_VERSION, id);
+    return;
   } else if (!strcmp(&cmd, "hwversion")) {
     if (!_sumorobot->hwVersion.major && !_sumorobot->hwVersion.minor) {
       sendResponse("complete", "unknown", id);
@@ -185,32 +183,50 @@ void CmdProcessor::processCmd(char &cmd, char &arg, char &id) {
       sprintf(v, "%d.%d", _sumorobot->hwVersion.major, _sumorobot->hwVersion.minor);
       sendResponse("complete", v, id);
     }
+    return;
   } else if (!strcmp(&cmd, "sethwversion")) {
     _sumorobot->setHwVersion(arg);
     sprintf(v, "%d.%d", _sumorobot->hwVersion.major, _sumorobot->hwVersion.minor);
     sendResponse("complete", v, id);
+    return;
   } else if (!strcmp(&cmd, "stop")) {
     _sumorobot->stop();
-    sendResponse("complete", "", id);
-  } else {
-    strcpy(current_id, &id);
-    if (!strcmp(&cmd, "forward")) {
-      _sumorobot->forward();
-    } else if (!strcmp(&cmd, "backward")) {
-      _sumorobot->backward();
-    } else if (!strcmp(&cmd, "right")) {
-      _sumorobot->right();
-    } else if (!strcmp(&cmd, "left")) {
-      _sumorobot->left();
-    } else if (!strcmp(&cmd, "beep")) {
-      _sumorobot->beep(atoi(&arg));
-    } else {
-      // the command isn't recognised, send an error
-      sendResponse("error", "Command not recognised", id);
-      return;
+  } else if (!strcmp(&cmd, "forward")) {
+    _sumorobot->forward();
+  } else if (!strcmp(&cmd, "backward")) {
+    _sumorobot->backward();
+  } else if (!strcmp(&cmd, "right")) {
+    _sumorobot->right();
+  } else if (!strcmp(&cmd, "left")) {
+    _sumorobot->left();
+  } else if (!strcmp(&cmd, "beep")) {
+    _sumorobot->beep(atoi(&arg));
+  } else if (!strcmp(&cmd, "enemy")) {
+    if (!strcmp(&arg, "left")) {
+        sendResponse("complete", _sumorobot->isEnemy(LEFT) ? "true" : "false", id);
+    } else if (!strcmp(&arg, "right")) {
+        sendResponse("complete", _sumorobot->isEnemy(RIGHT) ? "true" : "false", id);
+    } else if (!strcmp(&arg, "front")) {
+        sendResponse("complete", _sumorobot->isEnemy(FRONT) ? "true" : "false", id);
     }
-    sendResponse("accepted", "", *current_id);
+    return;
+  } else if (!strcmp(&cmd, "line")) {
+    if (!strcmp(&arg, "left")) {
+        sendResponse("complete", _sumorobot->isLine(LEFT) ? "true" : "false", id);
+    } else if (!strcmp(&arg, "right")) {
+        sendResponse("complete", _sumorobot->isLine(RIGHT) ? "true" : "false", id);
+    } else if (!strcmp(&arg, "front")) {
+        sendResponse("complete", _sumorobot->isLine(FRONT) ? "true" : "false", id);
+    }
+    return;
+  } else if (!strcmp(&cmd, "ping")) {
+    // just reply with complete
+  } else {
+    // the command isn't recognised, send an error
+    sendResponse("error", "Command not recognised", id);
+    return;
   }
+  sendResponse("complete", "", id);
 }
 
 void CmdProcessor::sendResponse(const char status[], const char msg[], char &id) {
