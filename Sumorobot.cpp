@@ -1,82 +1,12 @@
 #include "Sumorobot.h"
 
-/* command processor */
-CmdProcessor cmdProcessor;
-/* ultrasonic sensors */
-//NewPing leftSonar(ENEMY_SENSOR_LEFT, ENEMY_SENSOR_LEFT, 200);
-NewPing rightSonar(4, 2, 200);
-
 /* Pointer to the bootloader memory location */
 void* bl = (void *) 0x3c00;
-
-Sumorobot::Sumorobot() {
-    this->mainState = POWERED_UP;
-    this->lastLedChange = millis();
-}
-
-/* init motors function */
-void Sumorobot::setup() {
-    /* set up the status LED */
-    pinMode(STATUS_LED, OUTPUT);
-}
-
-void Sumorobot::setup(Stream &s) {
-    this->setup();
-    /* set up the command processor */
-    cmdProcessor.setup(s, self());
-    /* set up the ready pin to communicate with the WiFi module */
-    pinMode(WIFI_READY, INPUT); //nReady
-    this->initHwVersion();
-}
 
 void Sumorobot::reset() {
     /* give the response message time to get out */
     delay(100);
     goto *bl;
-}
-
-void Sumorobot::initHwVersion(){
-    if (EEPROM.read(0) == MAGIC_BYTE_1 && EEPROM.read(1) == MAGIC_BYTE_2) {
-        // We've previously written something valid to the EEPROM
-        this->hwVersion.major = EEPROM.read(2);
-        this->hwVersion.minor = EEPROM.read(3);
-    } else {
-        this->hwVersion.major = 0;
-        this->hwVersion.minor = 0;
-    }
-}
-
-void Sumorobot::setHwVersion(char &version) {
-    char v[4];
-    char i;
-    char v_ptr = 0;
-    char *ptr = &version;
-    for(i = 0; i < 9; i++){
-        if(ptr[i] >= 0x30 && ptr[i] <= 0x39){
-            v[v_ptr++] = ptr[i];
-        }
-        if(ptr[i] == '.'){
-              v[v_ptr++] = '\0';
-              break;
-        }
-    }
-    this->hwVersion.major = atoi(v);
-    v_ptr = 0;
-    for(i = i; i < 9; i++){
-        if(ptr[i] >= 0x30 && ptr[i] <= 0x39){
-            v[v_ptr++] = ptr[i];
-        }
-        if(ptr[i] == '\0'){
-            v[v_ptr++] = '\0';
-            break;
-        }
-    }
-    v[v_ptr] = '\0';
-    this->hwVersion.minor = atoi(v);
-    EEPROM.write(0, MAGIC_BYTE_1);
-    EEPROM.write(1, MAGIC_BYTE_2);
-    EEPROM.write(2, this->hwVersion.major);
-    EEPROM.write(3, this->hwVersion.minor);
 }
 
 /* function to calculate the the motor speed given the motor, directory and speed in precentage
@@ -116,8 +46,8 @@ void Sumorobot::start() {
 /* to stop */
 void Sumorobot::stop() {
     /* stop the motors */
-    this->leftServo.write(MIDPOINT-15);
-    this->rightServo.write(MIDPOINT-23);
+    this->leftServo.write(MIDPOINT);
+    this->rightServo.write(MIDPOINT);
     delay(200);
     /* detach the motors when attached */
     if (this->leftServo.attached()) this->leftServo.detach();
@@ -156,58 +86,26 @@ void Sumorobot::left() {
     this->leftServo.write(getSpeed(LEFT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
-void Sumorobot::beep(int duration) {
-    tone(SPEAKER_PIN, NOTE_C4, duration);
-}
-
 int Sumorobot::isEnemy(dir_t direction) {
-    int distance = (rightSonar.ping() / US_ROUNDTRIP_CM);
     switch (direction) {
         case LEFT:
-            return (distance != 0) && (distance < ENEMY_DISTANCE_RIGHT);
+            return analogRead(ENEMY_SENSOR_LEFT) > ENEMY_DISTANCE;
         case RIGHT:
-            return (distance != 0) && (distance < ENEMY_DISTANCE_RIGHT);
+            return analogRead(ENEMY_SENSOR_RIGHT) > ENEMY_DISTANCE;
         case FRONT:
-            return (distance != 0) && (distance < ENEMY_DISTANCE_RIGHT);
+            return (analogRead(ENEMY_SENSOR_LEFT) > ENEMY_DISTANCE) && 
+                (analogRead(ENEMY_SENSOR_RIGHT) > ENEMY_DISTANCE);
     }
 }
 
 int Sumorobot::isLine(dir_t direction) {
     switch (direction) {
         case LEFT:
-            return analogRead(LINE_SENSOR_LEFT) > LINE_INTENSITY_LEFT;
+            return analogRead(LINE_SENSOR_LEFT) < LINE_INTENSITY;
         case RIGHT:
-            return analogRead(LINE_SENSOR_RIGHT) > LINE_INTENSITY_RIGHT;
+            return analogRead(LINE_SENSOR_RIGHT) < LINE_INTENSITY;
         case FRONT:
-            return (analogRead(LINE_SENSOR_LEFT) > LINE_INTENSITY_LEFT) && 
-                (analogRead(LINE_SENSOR_RIGHT) > LINE_INTENSITY_RIGHT);
+            return (analogRead(LINE_SENSOR_LEFT) < LINE_INTENSITY) && 
+                (analogRead(LINE_SENSOR_RIGHT) < LINE_INTENSITY);
     }
-}
-
-void Sumorobot::checkState() {
-    if (!digitalRead(WIFI_READY)) {
-        this->mainState = CONNECTED;
-    } else {
-        this->mainState = POWERED_UP;
-    }
-}
-
-void Sumorobot::ledHandler() {
-    this->checkState();
-    switch (this->mainState) {
-        case POWERED_UP:
-            if (millis() - this->lastLedChange > 250) {
-                this->lastLedChange = millis();
-                digitalWrite(STATUS_LED, !digitalRead(STATUS_LED));
-            }
-            break;
-        case CONNECTED:
-            digitalWrite(STATUS_LED, HIGH);
-            break;
-    }
-}
-
-void Sumorobot::process() {
-    this->ledHandler();
-    cmdProcessor.process();
 }
