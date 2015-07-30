@@ -26,8 +26,8 @@ instead of SLOW, MAX_SPEED or 0 to 100 percent can be used
 */
 void loop()
 {
-	if (sumorobot.isOpponent(FRONT)) forward();    /* when enemy is in front of us, we go forward */
-	else if (sumorobot.isOpponent(LEFT)) left();   /* when the enemy is on the left side, we go left */
-	else if (sumorobot.isOpponent(RIGHT)) right(); /* when the enemy is on the right side, we go right */
-	else sumorobot.stop();                         /* when there is no enemy */
+	if (sumorobot.isOpponent(FRONT)) sumorobot.forward();    /* when enemy is in front of us, we go forward */
+	else if (sumorobot.isOpponent(LEFT)) sumorobot.left();   /* when the enemy is on the left side, we go left */
+	else if (sumorobot.isOpponent(RIGHT)) sumorobot.right(); /* when the enemy is on the right side, we go right */
+	else sumorobot.stop();                                   /* when there is no enemy */
 }
