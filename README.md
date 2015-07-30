@@ -17,7 +17,7 @@ installation
 * add the Sumorobot Arduino library
 ```bash
 $ sudo apt-get update && sudo apt-get install git arduino
-$ git clone https://github.com/robokoding/sumorobot-arduino.git
+$ git clone -b eik-sumorobot https://github.com/robokoding/sumorobot-arduino.git
 $ sudo mv /var/tmp/sumorobot-arduino /usr/share/arduino/libraries/Sumorobot
 ```
 * launch Arduino and upload an example
@@ -25,12 +25,12 @@ $ sudo mv /var/tmp/sumorobot-arduino /usr/share/arduino/libraries/Sumorobot
 other links
 ===========
 
-* gallery on google+ https://plus.google.com/photos/118227730440670321584/albums/5777266184562058609
-* guide on instructables http://www.instructables.com/id/Arduino-Sumorobot/
-* project poster https://www.sharelatex.com/project/52598a10e0deb8d1340053ea
-* workshop slides https://docs.google.com/presentation/d/194JcJHCedPZimk41OGD4uriet_0rB0_b3bzhDWw4v1Q
-* project report https://www.sharelatex.com/project/526d74ac7eea94a263004071
-* master thesis https://www.sharelatex.com/project/538a3afd0f8c136e7957e8c4
+* [gallery](https://plus.google.com/photos/118227730440670321584/albums/5777266184562058609)
+* [DIY guide](http://www.instructables.com/id/Arduino-Sumorobot/)
+* [master thesis](https://www.sharelatex.com/project/538a3afd0f8c136e7957e8c4)
+* [project report](https://www.sharelatex.com/project/526d74ac7eea94a263004071)
+* [project poster](https://www.sharelatex.com/project/52598a10e0deb8d1340053ea)
+* [workshop slides](https://docs.google.com/presentation/d/194JcJHCedPZimk41OGD4uriet_0rB0_b3bzhDWw4v1Q)
 
 credits ^_^
 ===========
