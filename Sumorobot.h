@@ -11,7 +11,6 @@
 
 /* configuration */
 /* movement */
-#define SLOW 10         // 10% of speed
 #define FORWARD 0       // forward direction
 #define BACKWARD 1      // backward direction
 #define SECOND 1000     // one second
@@ -38,11 +37,9 @@ typedef enum {LEFT, RIGHT, FRONT} dir_t;
 
 class Sumorobot {
     public:
-        
         void stop();
         void left();
         void right();
-        void reset();
         void forward();
         void backward();
         bool isLine(dir_t);

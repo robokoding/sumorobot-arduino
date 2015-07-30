@@ -1,14 +1,5 @@
 #include "Sumorobot.h"
 
-/* Pointer to the bootloader memory location */
-void* bl = (void *) 0x3c00;
-
-void Sumorobot::reset() {
-    /* give the response message time to get out */
-    this->delay(100);
-    goto *bl;
-}
-
 /* function to calculate the the motor speed given the motor, directory and speed in precentage
  @param motor ( RIGHT_MOTOR or LEFT_MOTOR )
  @param dir ( BACKWARD or FORWARD )
