@@ -33,40 +33,24 @@
 #define ENEMY_DISTANCE 200
 #define LINE_INTENSITY 600
 
+/* directions */
 typedef enum {LEFT, RIGHT, FRONT} dir_t;
 
 class Sumorobot {
     public:
-        void reset();
-        /* English version */
+        
         void stop();
         void left();
         void right();
+        void reset();
         void forward();
         void backward();
-        int isLine(dir_t);
-        int isEnemy(dir_t);
-        int isBorder(dir_t dir) { return isLine(dir); }
-        int isOpponent(dir_t dir) { return isEnemy(dir); }
-        /* Estonian version */
-        void stopp() { stop(); }
-        void edasi() { forward(); }
-        void vasakule() { left(); }
-        void paremale() { right(); }
-        void tagasi() { backward(); }
-        int onJoon(dir_t dir) { return isLine(dir); }
-        int onPiir(dir_t dir) { return isLine(dir); }
-        int onVastane(dir_t dir) { return isEnemy(dir); }
-        int onVaenlane(dir_t dir) { return isEnemy(dir); }
-        /* German version */
-        void links() { left(); }
-        void rechts() { right(); }
-        void vorwaerts() { forward(); }
-        void rueckwaerts() { backward(); }
-        int istLinie(dir_t dir) { return isLine(dir); }
-        int istGrenze(dir_t dir) { return isLine(dir); }
-        int istFeind(dir_t dir) { return isEnemy(dir); }
-        int istGegner(dir_t dir) { return isEnemy(dir); }
+        bool isLine(dir_t);
+        bool isEnemy(dir_t);
+        void delay(long millis) { delay(millis); }
+        void wait(long millis) { this->delay(millis); }
+        bool isBorder(dir_t dir) { return isLine(dir); }
+        bool isOpponent(dir_t dir) { return isEnemy(dir); }
     private:
         void start();
         /* sumorobot object instance */

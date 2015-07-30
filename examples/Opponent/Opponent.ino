@@ -8,10 +8,12 @@ Controlling Sumorobts servos and distance sensors
 #include <Servo.h>
 #include <Sumorobot.h>
 
+/* the sumorobot object */
+Sumorobot sumorobot;
+
 void setup()
 {
-	/* starting the servo motors */
-	start();
+	/* the setup function */
 }
 
 /*
@@ -24,8 +26,8 @@ instead of SLOW, MAX_SPEED or 0 to 100 percent can be used
 */
 void loop()
 {
-	if (ENEMY_FRONT) forward();    /* when enemy is in front of us, we go forward */
-	else if (ENEMY_LEFT) left();   /* when the enemy is on the left side, we go left */
-	else if (ENEMY_RIGHT) right(); /* when the enemy is on the right side, we go right */
-	else stop();                   /* when there is no enemy */
+	if (sumorobot.isOpponent(FRONT)) forward();    /* when enemy is in front of us, we go forward */
+	else if (sumorobot.isOpponent(LEFT)) left();   /* when the enemy is on the left side, we go left */
+	else if (sumorobot.isOpponent(RIGHT)) right(); /* when the enemy is on the right side, we go right */
+	else sumorobot.stop();                         /* when there is no enemy */
 }

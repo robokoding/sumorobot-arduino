@@ -5,7 +5,7 @@ void* bl = (void *) 0x3c00;
 
 void Sumorobot::reset() {
     /* give the response message time to get out */
-    delay(100);
+    this->delay(100);
     goto *bl;
 }
 
@@ -48,7 +48,7 @@ void Sumorobot::stop() {
     /* stop the motors */
     this->leftServo.write(MIDPOINT);
     this->rightServo.write(MIDPOINT);
-    delay(200);
+    this->delay(200);
     /* detach the motors when attached */
     if (this->leftServo.attached()) this->leftServo.detach();
     if (this->rightServo.attached()) this->rightServo.detach();
@@ -86,7 +86,7 @@ void Sumorobot::left() {
     this->leftServo.write(getSpeed(LEFT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
-int Sumorobot::isEnemy(dir_t direction) {
+bool Sumorobot::isEnemy(dir_t direction) {
     switch (direction) {
         case LEFT:
             return analogRead(ENEMY_SENSOR_LEFT) > ENEMY_DISTANCE;
@@ -98,7 +98,7 @@ int Sumorobot::isEnemy(dir_t direction) {
     }
 }
 
-int Sumorobot::isLine(dir_t direction) {
+bool Sumorobot::isLine(dir_t direction) {
     switch (direction) {
         case LEFT:
             return analogRead(LINE_SENSOR_LEFT) < LINE_INTENSITY;

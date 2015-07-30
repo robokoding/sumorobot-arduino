@@ -8,24 +8,25 @@ Controlling Sumorobts servo motors
 #include <Servo.h>
 #include <Sumorobot.h>
 
+/* the sumorobot object */
+Sumorobot sumorobot;
+
 void setup()
 {
-	/* starting the servo motors */
-	start();
+	/* the setup function */
 }
 
 /*
 ===========================================================================================================
 Make the robot go 1 second forward and backward xD
-HINT: sometimes you want to control the wheels separately, use leftMotor(dir, speed) rightMotor(dir, speed)
-TRY: leftMotor(FORWARD, 55) or rightMotor(BACKWARD, MAX_SPEED) or leftMotor(FORWARD, SLOW), instead of
-SLOW and MAX_SPEED, 0 to 100 can be used
+HINT: the delay is in milliseconds 1000 milliseconds = 1 second
+TRY: different timings as delay 100 to 2000
 ===========================================================================================================
 */
 void loop()
 {
-	forward();     /* give command to drive forward */
-	delay(SECOND); /* go forward for 1 second */
-	backward();    /* give command to drive backward */
-	delay(SECOND); /* go backward for 1 second */
+	sumorobot.forward();     /* give command to drive forward */
+	sumorobot.delay(SECOND); /* go forward for 1 second */
+	sumorobot.backward();    /* give command to drive backward */
+	sumorobot.delay(SECOND); /* go backward for 1 second */
 }
