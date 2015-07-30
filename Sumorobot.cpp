@@ -1,11 +1,9 @@
 #include "Sumorobot.h"
 
-/* function to calculate the the motor speed given the motor, directory and speed in precentage
- @param motor ( RIGHT_MOTOR or LEFT_MOTOR )
- @param dir ( BACKWARD or FORWARD )
- @param speed_percentage ( 0 to 100 )
- @return int ( 0 for success and 1-3 for error )
- */
+Sumorobot::Sumorobot() {
+    this->delay(SECOND);
+}
+
 int Sumorobot::getSpeed(uint8_t motor, uint8_t dir, uint8_t speed_percentage) {
     /* if precentage out of rage, return error */
     if (speed_percentage < 0 || speed_percentage > 100) return 3;
@@ -34,7 +32,6 @@ void Sumorobot::start() {
     if (this->rightServo.attached() == false) this->rightServo.attach(RIGHT_MOTOR);
 }
 
-/* to stop */
 void Sumorobot::stop() {
     /* stop the motors */
     this->leftServo.write(MIDPOINT);
@@ -45,7 +42,6 @@ void Sumorobot::stop() {
     if (this->rightServo.attached()) this->rightServo.detach();
 }
 
-/* to go forward */
 void Sumorobot::forward() {
     /* check if motors are attached */
     this->start();
@@ -53,7 +49,6 @@ void Sumorobot::forward() {
     this->rightServo.write(getSpeed(RIGHT_MOTOR, FORWARD, MAX_SPEED));
 }
 
-/* to go backward */
 void Sumorobot::backward() {
     /* check if motors are attached */
     this->start();
@@ -61,7 +56,6 @@ void Sumorobot::backward() {
     this->rightServo.write(getSpeed(RIGHT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
-/* to go right while driving forward */
 void Sumorobot::right() {
     /* check if motors are attached */
     this->start();
@@ -69,7 +63,6 @@ void Sumorobot::right() {
     this->rightServo.write(getSpeed(RIGHT_MOTOR, BACKWARD, MAX_SPEED));
 }
 
-/* to go left while driving forward */
 void Sumorobot::left() {
     /* check if motors are attached */
     this->start();
