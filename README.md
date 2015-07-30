@@ -9,7 +9,7 @@ sumorobot-arduino
 documentation
 =============
 
-* https://docs.google.com/document/d/13xdm1A4cbXLZElGiCtHdJ75QDpUnIy9GZ1jJJ20kKYo/edit
+* [programming reference](https://docs.google.com/document/d/13xdm1A4cbXLZElGiCtHdJ75QDpUnIy9GZ1jJJ20kKYo/edit)
 
 installation
 ============
