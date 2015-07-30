@@ -2,24 +2,23 @@ sumorobot-arduino
 =================
 
 * this Arduino Sumorobot platform is developed for beginners for teaching programming
-* this Sumorobot uses 2 servomotors and 2 ultrasonic proximity + 2 infrared line sensors
+* this Sumorobot uses 2 servomotors, 2 infrared distance and 3 infrared light sensors
 
 <img src="https://lh5.googleusercontent.com/-XHaMHrGOujI/VKlFvsZbCDI/AAAAAAAAJxw/ySdAVwUa8os/w969-h939-no/sumo.jpg" width="300px" alt="sumo">
 
 documentation
 =============
 
-* https://github.com/robokoding/sumoino/raw/master/documentation/student.pdf
-* https://github.com/robokoding/sumoino/raw/master/documentation/supervisor.pdf
+* https://docs.google.com/document/d/13xdm1A4cbXLZElGiCtHdJ75QDpUnIy9GZ1jJJ20kKYo/edit
 
 installation
 ============
 
 * add the Sumorobot Arduino library
 ```bash
-$ sudo apt-get update && sudo apt-get install arduino
-$ git clone https://github.com/robocoding/sumoino.git /var/tmp/sumoino
-$ sudo mv /var/tmp/sumoino/Sumorobot /usr/share/arduino/libraries/
+$ sudo apt-get update && sudo apt-get install git arduino
+$ git clone https://github.com/robokoding/sumorobot-arduino.git
+$ sudo mv /var/tmp/sumorobot-arduino /usr/share/arduino/libraries/Sumorobot
 ```
 * launch Arduino and upload an example
 
@@ -36,7 +35,7 @@ other links
 credits ^_^
 ===========
 
-* EIK Robotics Group
-* NorthernStars Robotics Group
-* Arduino developers
-* https://github.com/bjpirt/mirobot-arduino
+* [Mirobot](https://github.com/bjpirt/mirobot-arduino)
+* [Arduino developers](https://www.arduino.cc/)
+* [EIK Robotics Group](http://robot.itcollege.ee/)
+* [NorthernStars Robotics Group](http://www.northern-stars.de/)
