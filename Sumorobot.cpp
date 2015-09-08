@@ -1,7 +1,7 @@
 #include "Sumorobot.h"
 
 Sumorobot::Sumorobot() {
-    this->delay(SECOND);
+    //this->delay(SECOND);
 }
 
 int Sumorobot::getSpeed(uint8_t motor, uint8_t dir, uint8_t speed_percentage) {
