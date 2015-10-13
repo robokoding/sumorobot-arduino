@@ -65,7 +65,6 @@ class Sumorobot {
         void setup(Stream &s);
         void setHwVersion(char&);
         HwVersion hwVersion;
-        /* English version */
         void stop();
         void left();
         void right();
@@ -76,27 +75,6 @@ class Sumorobot {
         int isEnemy(dir_t);
         int isBorder(dir_t dir) { return isLine(dir); }
         int isOpponent(dir_t dir) { return isEnemy(dir); }
-        /* Estonian version */
-        void stopp() { stop(); }
-        void edasi() { forward(); }
-        void vasakule() { left(); }
-        void paremale() { right(); }
-        void tagasi() { backward(); }
-        void piiks(int dur) { beep(dur); }
-        int onJoon(dir_t dir) { return isLine(dir); }
-        int onPiir(dir_t dir) { return isLine(dir); }
-        int onVastane(dir_t dir) { return isEnemy(dir); }
-        int onVaenlane(dir_t dir) { return isEnemy(dir); }
-        /* German version */
-        void links() { left(); }
-        void rechts() { right(); }
-        void vorwaerts() { forward(); }
-        void ton(int dur) { beep(dur); }
-        void rueckwaerts() { backward(); }
-        int istLinie(dir_t dir) { return isLine(dir); }
-        int istGrenze(dir_t dir) { return isLine(dir); }
-        int istFeind(dir_t dir) { return isEnemy(dir); }
-        int istGegner(dir_t dir) { return isEnemy(dir); }
     private:
         void start();
         void checkState();
